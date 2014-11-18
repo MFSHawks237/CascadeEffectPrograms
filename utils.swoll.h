@@ -47,21 +47,34 @@ void Drive(tMotor Left, tMotor Right)
 	motor[Right] = joystick.joy1_y2;		// Right Drive
 }
 
-void Arm(tMotor Lift)//, tMotor Wrist)
+void Arm(tMotor Lift)
 {
-	if (i % 2 == 0)
+	if (joy1Btn(7))
 	{
-		motor[Lift] = joystick.joy2_y1*0.7;		// Both Lift Motors
-		if (motor[Lift] < -25)
-		{
-			motor[Lift] = -25;
-		}
+		motor[Lift] = 45;		// Arm up
 	}
-	else if (i % 2 == 1)
+	else if (joy1Btn(5))
 	{
-		motor[Lift] = joystick.joy2_y1;		// Both Lift Motors
+		motor[Lift] = -45;	// Arm down
 	}
-	//motor[Wrist] = joystick.joy2_y2*0.5;		// Wrist Motor at half power
+	else
+	{
+		motor[Lift] = 0;
+	}
+}
+
+void TubeGrab(TServoIndex A, TServoIndex B)
+{
+	if (joy1Btn(8))
+	{
+		servo[A] = 240;		// Both servos up
+		servo[B] = 0;
+	}
+	else if (joy1Btn(6))
+	{
+		servo[A] = 0;			// Both servos down
+		servo[B] = 255;
+	}
 }
 
 //*****************//
@@ -113,6 +126,8 @@ void setDistance(float target)
 void driveForDistance()
 {
 	driveError = g_driveTarget - nMotorEncoder[Right];
+	wait1Msec(25);
+	driveError = g_driveTarget - nMotorEncoder[Right];
 	if(abs(driveError) > buffer)
 	{
 		motor[Left] = driveError*dslope + abs(driveError)/driveError*dminPwr;
@@ -130,7 +145,7 @@ void driveForDistance()
 	}
 }
 
-void IRseeker()
+void IRseeker(tSensors IR)
 {
 	ENCDTMP = nMotorEncoder[Right]; // Save current encoder value
 	while(irseek)
