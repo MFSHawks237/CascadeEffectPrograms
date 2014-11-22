@@ -43,23 +43,34 @@ int DES;
 
 void Drive(tMotor Left, tMotor Right)
 {
-	motor[Left] = joystick.joy1_y1;		// Left Drive
-	motor[Right] = joystick.joy1_y2;		// Right Drive
-}
-
-void Arm(tMotor Lift)
-{
-	if (joy1Btn(7))
+	if (abs(joystick.joy1_y1) > 20 || abs(joystick.joy1_y2) > 20)		// Buffer fixes lag
 	{
-		motor[Lift] = 45;		// Arm up
-	}
-	else if (joy1Btn(5))
-	{
-		motor[Lift] = -45;	// Arm down
+		motor[Left] = joystick.joy1_y1;		// Left Drive
+		motor[Right] = joystick.joy1_y2;		// Right Drive
 	}
 	else
 	{
-		motor[Lift] = 0;
+		motor[Left] = 0;
+		motor[Right] = 0;
+	}
+}
+
+void Arm(tMotor Lift, int i)
+{
+	if (joy1Btn(2) == false)
+	{
+		if (joystick.joy2_y1 < 0)
+		{
+			motor[Lift] = joystick.joy2_y1*.25;
+		}
+		else
+		{
+			motor[Lift] = joystick.joy2_y1*.5; //arm stuff
+		}
+	}
+	else
+	{
+		motor[Lift] = joystick.joy2_y1;
 	}
 }
 
@@ -74,6 +85,19 @@ void TubeGrab(TServoIndex A, TServoIndex B)
 	{
 		servo[A] = 0;			// Both servos down
 		servo[B] = 255;
+	}
+}
+
+void Spinner (tMotor spin, TServoIndex C)
+{
+	motor[spin] = joystick.joy2_y2;
+	if (joy2Btn(6))
+	{
+		servo[C] = 0;
+	}
+	else if (joy2Btn(8))
+	{
+		servo[C] = 103;
 	}
 }
 
@@ -133,6 +157,28 @@ void driveForDistance()
 		motor[Left] = driveError*dslope + abs(driveError)/driveError*dminPwr;
 		motor[Right] = driveError*dslope + abs(driveError)/driveError*dminPwr;
 		if (motor[Left] <= 5)
+		{
+			g_driveEnabled = false;
+		}
+	}
+	else
+	{
+		motor[Left] = 0;
+		motor[Right] = 0;
+		g_driveEnabled = false;
+	}
+}
+
+void driveForDistanceBack()
+{
+	driveError = g_driveTarget - nMotorEncoder[Right];
+	wait1Msec(25);
+	driveError = g_driveTarget - nMotorEncoder[Right];
+	if(abs(driveError) > buffer)
+	{
+		motor[Left] = driveError*dslope + abs(driveError)/driveError*dminPwr;
+		motor[Right] = driveError*dslope + abs(driveError)/driveError*dminPwr;
+		if (motor[Left] >= -5)
 		{
 			g_driveEnabled = false;
 		}
