@@ -43,21 +43,21 @@ int DES;
 
 void Drive(tMotor Left, tMotor Right)
 {
-	if (abs(joystick.joy1_y1) > 20 || abs(joystick.joy1_y2) > 20)		// Buffer fixes lag
-	{
+	//if (abs(joystick.joy1_y1) > 20 || abs(joystick.joy1_y2) > 20)		// Buffer fixes lag
+	//{
 		motor[Left] = joystick.joy1_y1;		// Left Drive
 		motor[Right] = joystick.joy1_y2;		// Right Drive
-	}
-	else
-	{
-		motor[Left] = 0;
-		motor[Right] = 0;
-	}
+	//}
+	//else
+	//{
+		//motor[Left] = 0;
+		//motor[Right] = 0;
+	//}
 }
 
 void Arm(tMotor Lift, int i)
 {
-	if (joy1Btn(2) == false)
+	if (joy2Btn(2) == false)
 	{
 		if (joystick.joy2_y1 < 0)
 		{
@@ -74,30 +74,30 @@ void Arm(tMotor Lift, int i)
 	}
 }
 
-void TubeGrab(TServoIndex A, TServoIndex B)
+void TubeGrab(TServoIndex Tube1, TServoIndex Tube2)
 {
-	if (joy1Btn(8))
+	if (joy1Btn(6))
 	{
-		servo[A] = 240;		// Both servos up
-		servo[B] = 0;
+		servo[Tube1] = 155;		// Both servos up
+		servo[Tube2] = 110;
 	}
-	else if (joy1Btn(6))
+	else if (joy1Btn(8))
 	{
-		servo[A] = 0;			// Both servos down
-		servo[B] = 255;
+		servo[Tube1] = 0;			// Both servos down
+		servo[Tube2] = 255;
 	}
 }
 
-void Spinner (tMotor spin, TServoIndex C)
+void Spinner (tMotor spin, TServoIndex Sarm)		// Motor Sweep and Sweep Arm
 {
 	motor[spin] = joystick.joy2_y2;
-	if (joy2Btn(6))
+	if (joy2Btn(8))
 	{
-		servo[C] = 0;
+		servo[Sarm] = 120;
 	}
-	else if (joy2Btn(8))
+	else if (joy2Btn(6))
 	{
-		servo[C] = 103;
+		servo[Sarm] = 225;
 	}
 }
 

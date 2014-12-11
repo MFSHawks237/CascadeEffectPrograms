@@ -104,9 +104,9 @@ void turner(int as)
 
 task main()
 {
-	//waitForStart();
+	waitForStart();
 	servo[C] = 0;
-	//motor[Lift] = 50;
+	motor[Lift] = 50;
 	wait1Msec(300);
 	motor[Lift] = 0;
 	int pitch = 0; // x-axis
@@ -158,15 +158,15 @@ task main()
 		}
 	}
 	one = true;
-	turner(-180);	// Turn 1		-83.5
+	//turner(-180);	// Turn 1		-83.5
 	servo[A] = 240;
 	servo[B] = 0;
-	deRive(-4000);			//2900
+	deRive(2000);			//2900`	//-4000
 	wait1Msec(100);
 	servo[A] = 0;
 	servo[B] = 255;
 	wait1Msec(400);
-	deRive(1500);
+	//deRive(1500);
 	/*turner(-40);	// Turn 2
 	driveAfterTurn(3300);
 	turner(40);	// Turn 3
