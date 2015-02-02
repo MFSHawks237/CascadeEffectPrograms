@@ -149,6 +149,7 @@ task main()
 		}
 		else
 		{
+			nMotorEncoder[Right] = 0;
 			motor[Left] = 50;
 			motor[Right] = 50;
 			wait1Msec(500);
@@ -161,11 +162,12 @@ task main()
 	//turner(-180);	// Turn 1		-83.5
 	servo[A] = 240;
 	servo[B] = 0;
-	deRive(2000);			//2900`	//-4000
+	deRive(-2000);			//2900`	//-4000
 	wait1Msec(100);
 	servo[A] = 0;
 	servo[B] = 255;
 	wait1Msec(400);
+	deRive(nMotorEncoder[Right]);
 	//deRive(1500);
 	/*turner(-40);	// Turn 2
 	driveAfterTurn(3300);

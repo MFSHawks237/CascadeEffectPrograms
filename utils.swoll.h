@@ -26,7 +26,7 @@ GYRO  g_Gyro;
 float g_turnTarget = 0.0;
 bool  g_turnEnabled = false;
 float g_tolerance = 0.5;  // needs to be tuned   .5
-float Kp = 0.01;           // proportion gain constant needs to be tuned // original .1	//	.05 seems good //	.01 slow but good
+float Kp = 0.04;           // proportion gain constant needs to be tuned // original .1	//	.05 seems good //	.01 slow but good
 bool g_driveEnabled = false;
 float g_driveTarget;
 float buffer = 5;
@@ -36,6 +36,7 @@ int i = 0;
 float driveError;
 int ENCDTMP;
 int DES;
+float oldDrivePower = 0;
 
 //********//
 // Teleop //
