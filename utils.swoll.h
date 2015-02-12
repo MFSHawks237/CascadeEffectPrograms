@@ -89,12 +89,28 @@ void TubeGrab(TServoIndex Tube1, TServoIndex Tube2)
 	}
 }
 
+void Flag (TServoIndex Bar)
+{
+	if (joy2Btn(4))
+	{
+		servo[Bar] = 255;
+	}
+	else if (joy2Btn(2))
+	{
+		servo[Bar] = 0;
+	}
+	else if (joy2Btn(3))
+	{
+		servo[Bar] = 128;
+	}
+}
+
 void Spinner (tMotor spin, TServoIndex Sarm)		// Motor Sweep and Sweep Arm
 {
 	motor[spin] = joystick.joy2_y2;
 	if (joy2Btn(8))
 	{
-		servo[Sarm] = 120;
+		servo[Sarm] = 130;
 	}
 	else if (joy2Btn(6))
 	{
@@ -266,4 +282,47 @@ void RampGo()
 	{
 		driveForDistance();
 	}
+}
+
+void turner(int as)
+{
+	bool one = true;
+	while (one)
+	{
+		initializeRobot();
+		SetTurnTarget(as);			//good target	83.5 for 90	//40 for 45
+		while(g_turnEnabled) // Turn the robot Perp
+		{
+			GyroTask(g_Gyro);
+			TurnTask();
+			wait1Msec(10);
+		}
+		wait1Msec(1000);
+		one = false;
+	}
+	one = true;
+}
+
+void deRive(int disr)
+{
+	setDistance(disr);
+	while(g_driveEnabled)
+	{
+		/*if (USreadDist(sonar1) < 35 && USreadDist(sonar2) < 35)
+		{
+		PlaySound(soundBeepBeep);
+		wait1Msec(100);
+		g_driveEnabled = false;
+		}*/
+		if (disr > 0)
+		{
+			driveForDistance();
+		}
+		else if (disr < 0)
+		{
+			driveForDistanceBack();
+		}
+	}
+	motor[Left] = 0;
+	motor[Right] = 0;
 }
