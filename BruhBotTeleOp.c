@@ -39,6 +39,6 @@ task main()
 		Arm(Lift, i);					// Scoring Arm
 		TubeGrab(Tube1, Tube2);				// Servo tube base grabbing thing
 		Spinner(Sweep, Sarm);		// Sweep motor control and sweep servo
-		Flag(Bar);
+		//Flag(Bar);
 	}
 }

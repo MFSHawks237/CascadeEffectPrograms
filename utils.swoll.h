@@ -15,9 +15,9 @@
 
 #define irpower 15
 #define dslope 30/720
-#define maxPwr 10
+#define maxPwr 12
 #define dminPwr 7
-#define minPwr 30
+#define minPwr 32
 #define BOUND(n, l, h) (((n) < (l))? (l): ((n) > (h))? (h): (n))
 #define drivePower 100
 #define rampPWR 50
@@ -26,7 +26,7 @@ GYRO  g_Gyro;
 float g_turnTarget = 0.0;
 bool  g_turnEnabled = false;
 float g_tolerance = 0.5;  // needs to be tuned   .5
-float Kp = 0.04;           // proportion gain constant needs to be tuned // original .1	//	.05 seems good //	.01 slow but good
+float Kp = 0.1;           // proportion gain constant needs to be tuned // original .1	//	.05 seems good //	.01 slow but good
 bool g_driveEnabled = false;
 float g_driveTarget;
 float buffer = 5;
@@ -89,7 +89,7 @@ void TubeGrab(TServoIndex Tube1, TServoIndex Tube2)
 	}
 }
 
-void Flag (TServoIndex Bar)
+/*void Flag (TServoIndex Bar)
 {
 	if (joy2Btn(4))
 	{
@@ -103,18 +103,18 @@ void Flag (TServoIndex Bar)
 	{
 		servo[Bar] = 128;
 	}
-}
+}*/
 
 void Spinner (tMotor spin, TServoIndex Sarm)		// Motor Sweep and Sweep Arm
 {
 	motor[spin] = joystick.joy2_y2;
 	if (joy2Btn(8))
 	{
-		servo[Sarm] = 130;
+		servo[Sarm] = 10;
 	}
 	else if (joy2Btn(6))
 	{
-		servo[Sarm] = 225;
+		servo[Sarm] = 128;
 	}
 }
 
@@ -325,4 +325,48 @@ void deRive(int disr)
 	}
 	motor[Left] = 0;
 	motor[Right] = 0;
+}
+
+void distCheck ()
+{
+	if(SensorValue[sonar] >= 20)
+	{
+		motor[Left] = -10;
+		motor[Right] = -80;
+		wait1Msec(500);
+		motor[Left] = 0;
+		motor[Right] = 0;
+		deRive(-200);
+	}
+	else if (SensorValue[sonar] <= 10)
+	{
+		motor[Left] = -80;
+		motor[Right] = -10;
+		wait1Msec(500);
+		motor[Left] = 0;
+		motor[Right] = 0;
+		deRive(-200);
+	}
+}
+
+void negDistCheck ()
+{
+	if(SensorValue[sonar] >= 20)
+	{
+		motor[Left] = 80;
+		motor[Right] = 10;
+		wait1Msec(500);
+		motor[Left] = 0;
+		motor[Right] = 0;
+		deRive(-200);
+	}
+	else if (SensorValue[sonar] <= 10)
+	{
+		motor[Left] = 10;
+		motor[Right] = 80;
+		wait1Msec(500);
+		motor[Left] = 0;
+		motor[Right] = 0;
+		deRive(-200);
+	}
 }

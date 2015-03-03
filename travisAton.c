@@ -23,7 +23,7 @@ task main()
 {
 
 	waitForStart();
-	servo[C] = 255;
+	servo[C] = 128;
 	motor[Lift] = 50;
 	wait1Msec(300);
 	motor[Lift] = 0;

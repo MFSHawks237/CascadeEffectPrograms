@@ -2,14 +2,15 @@
 #pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
 #pragma config(Sensor, S3,     accel,          sensorI2CCustom)
-#pragma config(Motor,  motorA,          LA,            tmotorNXT, PIDControl, encoder)
-#pragma config(Motor,  motorB,          LB,            tmotorNXT, PIDControl, encoder)
+#pragma config(Sensor, S4,     sonar,          sensorSONAR)
+#pragma config(Motor,  motorA,           ,             tmotorNXT, openLoop)
+#pragma config(Motor,  motorB,           ,             tmotorNXT, openLoop)
 #pragma config(Motor,  mtr_S1_C1_1,     Right,         tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C1_2,     Left,          tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_1,     Lift,          tmotorTetrix, openLoop, reversed)
-#pragma config(Motor,  mtr_S1_C2_2,     Flap,          tmotorTetrix, openLoop)
-#pragma config(Servo,  srvo_S1_C3_1,    servo1,               tServoNone)
-#pragma config(Servo,  srvo_S1_C3_2,    servo2,               tServoNone)
+#pragma config(Motor,  mtr_S1_C1_2,     Flap,          tmotorTetrix, openLoop, reversed)
+#pragma config(Motor,  mtr_S1_C2_1,     Left,          tmotorTetrix, openLoop)
+#pragma config(Motor,  mtr_S1_C2_2,     Lift,          tmotorTetrix, openLoop)
+#pragma config(Servo,  srvo_S1_C3_1,    Tube1,                tServoStandard)
+#pragma config(Servo,  srvo_S1_C3_2,    Tube2,                tServoStandard)
 #pragma config(Servo,  srvo_S1_C3_3,    servo3,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_4,    servo4,               tServoNone)
 #pragma config(Servo,  srvo_S1_C3_5,    servo5,               tServoNone)
@@ -24,6 +25,7 @@ task main()
 	while (true)
 	{
 		Drive(Left, Right);
+
 		if (joy1Btn(6))
 		{
 			motor[Lift] = 100;
@@ -36,6 +38,7 @@ task main()
 		{
 			motor[Lift] = 0;
 		}
+
 		if (joy1Btn(5))
 		{
 			motor[Flap] = 100;
@@ -48,20 +51,16 @@ task main()
 		{
 			motor[Flap] = 0;
 		}
-		if (joy1Btn(2))
+
+		if (joy1Btn(6))
 		{
-			motor[LA] = 100;
-			motor[LB] = 100;
+			servo[Tube1] = 155;		// Both servos up
+			servo[Tube2] = 110;
 		}
-		else if (joy1Btn(4))
+		else if (joy1Btn(8))
 		{
-			motor[LA] = -100;
-			motor[LB] = -100;
-		}
-		else
-		{
-			motor[LA] = 0;
-			motor[LB] = 0;
+			servo[Tube1] = 0;			// Both servos down
+			servo[Tube2] = 255;
 		}
 	}
 }

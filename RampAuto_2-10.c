@@ -1,7 +1,8 @@
 #pragma config(Hubs,  S1, HTMotor,  HTMotor,  HTServo,  HTMotor)
+#pragma config(Sensor, S1,     ,               sensorI2CMuxController)
 #pragma config(Sensor, S2,     gyro,           sensorI2CHiTechnicGyro)
 #pragma config(Sensor, S3,     accel,          sensorI2CCustom)
-#pragma config(Sensor, S4,     sonar,          sensorSONAR)
+#pragma config(Sensor, S4,     IR,             sensorHiTechnicIRSeeker1200)
 #pragma config(Motor,  mtr_S1_C1_1,     Left,          tmotorTetrix, openLoop, encoder)
 #pragma config(Motor,  mtr_S1_C1_2,     Right,         tmotorTetrix, openLoop, reversed, encoder)
 #pragma config(Motor,  mtr_S1_C2_1,     Lift,          tmotorTetrix, openLoop, reversed)
@@ -24,7 +25,7 @@
 
 
 //#include "drivers/hitechnic-sensormux.h"
-#include "drivers/lego-ultrasound.h"
+//#include "drivers/lego-ultrasound.h"
 #include "drivers/hitechnic-irseeker-v2.h"
 
 //const tMUXSensor sonar1 = msensor_S4_1;
@@ -40,8 +41,8 @@ task main()
 	waitForStart();
 	servo[A] = 155;
 	servo[B] = 110;
-	servo[C] = 128;
-	//servo[Bar] = 128;
+	servo[C] = 255;
+	servo[Bar] = 128;
 	motor[Lift] = 50;
 	wait1Msec(300);
 	motor[Lift] = 0;
@@ -50,64 +51,67 @@ task main()
 	int z = 0; // z-axis
 	string _tmp;
 	eraseDisplay();
-	motor[Left] = -50;
-	motor[Right] = -60;
-	wait1Msec(1500);
-	motor[Left] = 0;
-	motor[Right] = 0;
-	while(one)
+	HTACreadAllAxes(accel, pitch, bank, z);
+	nxtDisplayTextLine(2, "   X    Y    Z");
+	StringFormat(_tmp, "%4d %4d", pitch, bank);
+	nxtDisplayTextLine(3, "%s %4d", _tmp, z);
+	if (pitch <= -19 || pitch >= 19)
 	{
-		//distCheck();
-		deRive(-1000);
-		//distCheck();
-		deRive(-1500);
-		motor[Left] = -10;
-		motor[Right] = -65;
-		wait1Msec(500);
-		motor[Left] = 0;
-		motor[Right] = 0;
-		nMotorEncoder[Right] = 0;
-		/*motor[Left] = -2;
+		HTACreadAllAxes(accel, pitch, bank, z);
+		wait1Msec(1);
+		if (pitch <= -19 || pitch >= 19)
+		{
+			HTACreadAllAxes(accel, pitch, bank, z);
+			wait1Msec(1);
+			if (pitch <= -19 || pitch >= 19)
+			{
+				motor[Left] = -15;
+				motor[Right] = -40;	// >=19 works
+			}
+			else
+			{
+				HTACreadAllAxes(accel, pitch, bank, z);
+				motor[Left] = 0;
+				motor[Right] = 0;
+			}
+		}
+	}
+	else
+	{
+		motor[Left] = -2;
 		motor[Right] = -70;
 		wait1Msec(500);
 		motor[Left] =0;
-		motor[Right] = 0;*/
+		motor[Right] = 0;
+		one = false;
+	}
+	one = true;
+	while(one)
+	{
+		deRive(-2500);
+		nMotorEncoder[Right] = 0;
+		motor[Left] = -2;
+		motor[Right] = -70;
+		wait1Msec(500);
+		motor[Left] =0;
+		motor[Right] = 0;
 		one = false;
 		initializeRobot();
-		//}
-		//}
 		one = true;
-		//turner(-180);	// Turn 1		-83.5
-		deRive(-1500);			//2900`	//-4000
-		//distCheck();
-		deRive(-1000);			//1700
-		wait1Msec(50);
+		deRive(-2700);			//2900`	//-4000
+		wait1Msec(100);
 		servo[A] = 0;
 		servo[B] = 255;
-		motor[Left] = -30;
-		motor[Right] = -30;
-		wait1Msec(300);
-		motor[Left] = 0;
-		motor[Right] = 0;
-		//deRive(-300);
+		wait1Msec(400);
 		motor[Lift] = 100;			/// Keep this
 		wait1Msec(1000);
 		motor[Lift] = 0;
 		wait1Msec(500);					/// Keep this
-		//int j = -nMotorEncoder[Right];
 		deRive(-nMotorEncoder[Right]);
-		//deRive(j/2);					/////////////////////////////Something happened around here... No idea
-		//negDistCheck();
-		//deRive(j/2);
-		turner(80);
-		deRive(1400);
-		turner(95);
+		turner(83.5);
+		deRive(1500);
+		turner(100);
 		deRive(-7800);
-		motor[Left] = -30;
-		motor[Right] = -30;
-		wait1Msec(300);
-		motor[Left] = 0;
-		motor[Right] = 0;
 		servo[A] = 240;
 		servo[B] = 0;
 		one = false;
